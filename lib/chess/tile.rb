@@ -9,5 +9,10 @@ module Chess
       @current_piece = ''
       @occupied = false
     end
+
+    def occupied?
+      @occupied
+    end
+    
   end
 end
