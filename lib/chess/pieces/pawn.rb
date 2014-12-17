@@ -22,9 +22,9 @@ module Chess
 
     def move_dirs
       if @color == :W
-        WHITE_PAWN_MOVES
+        return WHITE_PAWN_MOVES
       else
-        BLACK_PAWN_MOVES
+        return BLACK_PAWN_MOVES
       end
     end
 
@@ -33,26 +33,36 @@ module Chess
 
     end
 
-    def moves(move_dirs) # array of possible moves
-      move_dirs[0].pop unless @moved
+    def moved?
+      if color == :W && position[0] == 6
+        return false
+      elsif color == :B && position[0] == 1
+        return false
+      end
+      true
+    end
+
+    def moves # array of possible moves
+
+      move_dirs[:vertical_moves].pop if moved?
       init_x, init_y = @position
       returned_moves = []
-      first_pos = [init_x + move_dirs[0][0], init_y]
+      first_pos = [init_x + move_dirs[:vertical_moves][0][0], init_y]
+      #separate into methods
+
       move_dirs[:vertical_moves].each do |x, y|
         dir = [init_x + x, init_y]
-        returned_moves << dir if @board.valid_move?(self, first_pos) &&
+        returned_moves << dir if board.valid_move?(self, first_pos) &&
           @board.valid_move?(self, dir)
       end
 
       move_dirs[:diagonal_moves].each do |x, y|
         dir = [init_x + x, init_y + y]
-        returned_moves << dir if board.get_position(dir).occupied? &&
-          board.get_position(dir).current_piece.color != self.color
+        unless board.get_position(dir).nil?
+          returned_moves << dir if board.get_position(dir).occupied? &&
+            board.get_position(dir).current_piece.color != self.color
+        end
       end
-
-
-
-
       returned_moves
     end
 

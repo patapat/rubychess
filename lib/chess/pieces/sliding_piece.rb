@@ -4,11 +4,6 @@ module Chess
 
   class SlidingPiece < Piece
 
-    # Symbol denotes type i.e. (Queen, Rook, Bishop)
-    def initialize(symbol, icon, position, color, board)
-      super
-    end
-
     def moves(position, directions) # returns an array of valid moves
       init_x, init_y = position
       returned_positions = []
@@ -24,7 +19,5 @@ module Chess
 
       returned_positions
     end
-
-
   end
 end

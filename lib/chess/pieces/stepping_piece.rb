@@ -4,10 +4,6 @@ module Chess
 
   class SteppingPiece < Piece
 
-    def initialize(symbol, icon, position, color, board)
-      super
-    end
-
     def moves(position, directions)
       init_x, init_y = position
       returned_positions = []
