@@ -31,7 +31,7 @@ module Chess
 
     def get_position(pos)
       x, y = pos
-      return nil if (x > 7 || x < 0) || (y > 7 || y < 0)
+      return nil if ((x > 7 || x < 0) || (y > 7 || y < 0))
       @grid[x][y]
     end
 
@@ -81,7 +81,9 @@ module Chess
 
     def move(start, dest) #return coordinates
       start_piece = piece_on_tile(start)
+      debugger
       if start_piece.moves.include?(dest)
+
         tile = get_position(dest)
         if tile.occupied?
           end_piece = tile.current_piece

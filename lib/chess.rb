@@ -27,9 +27,9 @@ end
 b = Chess::Board.new
 b.generate_start_board
 
-b.move([6, 0], [4, 0])
-p b.piece_on_tile([6, 0])
-p b.piece_on_tile([4, 0])
-b.move([7, 1], [5, 2])
-p b.piece_on_tile([5, 2])
-p b.piece_on_tile([7, 1])
+b.move([6, 4], [5, 4])
+p b.piece_on_tile([6, 4])
+p b.piece_on_tile([5, 4])
+b.move([7, 5], [5, 3])
+p b.piece_on_tile([5, 3])
+p b.piece_on_tile([7, 5])

@@ -52,8 +52,10 @@ module Chess
 
       move_dirs[:vertical_moves].each do |x, y|
         dir = [init_x + x, init_y]
-        returned_moves << dir if board.valid_move?(self, first_pos) &&
-          @board.valid_move?(self, dir)
+        unless board.get_position(dir).nil?
+          returned_moves << dir if board.valid_move?(self, first_pos) &&
+            @board.valid_move?(self, dir)
+        end
       end
 
       move_dirs[:diagonal_moves].each do |x, y|
