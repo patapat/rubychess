@@ -1,4 +1,5 @@
 require 'byebug'
+require 'colorize'
 
 module Chess
 
@@ -23,6 +24,7 @@ module Chess
        return false if get_position(position).nil?
        return true if piece_on_tile(position) == ''
        return false if piece_on_tile(position).color == piece.color
+       true
     end
 
     def piece_on_tile(position)
@@ -60,30 +62,41 @@ module Chess
           tile.occupied = true
         end
       end
+      8.times do |row|
+        8.times do |col|
+          if (row.odd? && col.odd?) || (row.even? && col.even?)
+            get_position([row, col]).icon = '  '.colorize( :background => :light_cyan)
+          else
+            get_position([row, col]).icon = '  '.colorize( :background => :black)
+          end
+
+        end
+      end
     end
 
     def in_check?(color)
-      king = current_pieces[color].select do |piece|
+      king = current_pieces[color].find do |piece|
         piece.symbol == :K
       end
-      king = king[0]
-
+      results = []
       opp_color = (color == :W ? :B : :W)
-      current_pieces[opp_color].none? do |piece|
-        piece.moves.include?(king.position)
+      current_pieces[opp_color].each do |piece|
+        results += piece.moves
       end
+      results.include?(king.position)
+    end
 
-      b.current_pieces[:B].none? do |piece|
-        piece.moves.include?(a.position)
+    def checkmate?(color)
+      self.in_check?(color) && current_pieces[color].none? do |piece|
+        piece.valid_moves(piece.moves).count > 0
       end
     end
 
-
     def move(start, dest) #return coordinates
       start_piece = piece_on_tile(start)
-      debugger
-      if start_piece.moves.include?(dest)
-
+      moves = start_piece.moves
+      valid_moves = start_piece.valid_moves(moves)
+      if valid_moves.include?(dest)
         tile = get_position(dest)
         if tile.occupied?
           end_piece = tile.current_piece
@@ -94,15 +107,70 @@ module Chess
         start_piece.position = dest
         get_position(start).current_piece = ""
         get_position(start).occupied = false
+        nil
       else
         raise InvalidMoveError.new "Please select a valid move"
       end
     end
 
-    def deep_dup(grid)
-      grid.inject([]) do |dup, el|
-        dup << (el.is_a?(Array) ? deep_dup(el) : el)
+
+    def move!(start, dest)
+      start_piece = piece_on_tile(start)
+      tile = get_position(dest)
+      if tile.occupied?
+        end_piece = tile.current_piece
+        @current_pieces[end_piece.color].delete(end_piece)
       end
+      tile.current_piece = start_piece
+      tile.occupied = true
+      start_piece.position = dest
+      get_position(start).current_piece = ""
+      get_position(start).occupied = false
+    end
+
+    # def psuedo
+    #   make the move on the duped_board (what are we passing in?)
+    #   check if we are in_check? on this board
+    #   in not return that move
+    # end
+
+    def deep_dup(old_grid)
+      duped_board = Board.new
+
+      8.times do |i|
+        8.times do |j|
+          old_piece = old_grid[i][j].current_piece
+          if old_piece == ''
+            duped_board.grid[i][j].current_piece = old_piece
+          else
+            b = old_piece.class.new(old_piece.position, old_piece.color, duped_board)
+            duped_board.grid[i][j].current_piece = b
+            duped_board.grid[i][j].occupied = true
+            duped_board.current_pieces[b.color] << b
+          end
+        end
+      end
+      duped_board
+      # grid.inject([]) do |dup, el|
+      #   dup << (el.is_a?(Array) ? deep_dup(el) : el.class.new(duped_board))
+    end
+
+    def render
+      8.times do |row|
+        8.times do |col|
+          if grid[row][col].occupied?
+            if (row.odd? && col.odd?) || (row.even? && col.even?)
+              print (grid[row][col].current_piece.icon + ' ').colorize( :background => :light_cyan)
+            else
+              print (grid[row][col].current_piece.icon + ' ').colorize( :background => :black)
+            end
+          else
+            print grid[row][col].icon
+          end
+        end
+        puts
+      end
+
     end
 
 

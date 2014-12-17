@@ -1,10 +1,12 @@
+require 'colorize'
+
 module Chess
   class Tile
-    attr_reader :value, :board
-    attr_accessor :current_piece, :occupied
+    attr_reader :board
+    attr_accessor :current_piece, :occupied, :icon
 
     def initialize(board)
-      @value = ''
+      @icon = ' '
       @board = board
       @current_piece = ''
       @occupied = false

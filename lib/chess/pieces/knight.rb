@@ -15,8 +15,8 @@ module Chess
     ]
 
     def initialize(position, color, board)
+      color == :W ? @icon = "\u265E".encode("UTF-8") : @icon = "\u2658".encode("UTF-8")
       @symbol = :N
-      @icon = "N"
       super(@symbol, @icon, position, color, board)
     end
 

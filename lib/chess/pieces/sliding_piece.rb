@@ -11,7 +11,7 @@ module Chess
       directions.each do |x, y|
         test_pos = [init_x + x, init_y + y]
         while board.valid_move?(self, test_pos)
-          returned_positions << test_pos
+          returned_positions << test_pos.dup
           test_pos[0] += x
           test_pos[1] += y
         end

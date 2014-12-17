@@ -1,3 +1,4 @@
+require 'byebug'
 
 module Chess
 
@@ -16,7 +17,7 @@ module Chess
       [1, 0]
     ]
 
-    attr_reader :color, :symbol, :board
+    attr_reader :color, :symbol, :board, :icon
     attr_accessor :position
 
     def initialize(symbol, icon, position, color, board)
@@ -31,11 +32,18 @@ module Chess
       "#{@symbol}, #{@position}, #{@color}"
     end
 
-    def moves(offsets, positon)
-      offsets.select do |x, y|
-        [x, y] unless board[positon[0] + x][position[1] + y].nil?
+    def valid_moves(moves) #return array of valid moves
+      result = []
+      moves.each do |test_move|
+        duped_board = board.deep_dup(board.grid)
+
+        duped_board.move!(self.position, test_move)
+        result << test_move unless duped_board.in_check?(color)
       end
+      result
     end
+
+
 
     def move_in_check(pos)
       # dup board

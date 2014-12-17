@@ -14,8 +14,8 @@ module Chess
     }
 
     def initialize(position, color, board)
+      color == :W ? @icon = "\u265F".encode("UTF-8") : @icon = "\u2659".encode("UTF-8")
       @symbol = :P
-      @icon = "P"
       super(@symbol, @icon, position, color, board)
       @moved = false
     end
@@ -44,17 +44,17 @@ module Chess
 
     def moves # array of possible moves
 
-      move_dirs[:vertical_moves].pop if moved?
       init_x, init_y = @position
       returned_moves = []
-      first_pos = [init_x + move_dirs[:vertical_moves][0][0], init_y]
+      moved? ? n = 1 : n = 2
+      vert_moves = move_dirs[:vertical_moves].take(n)
+
       #separate into methods
 
-      move_dirs[:vertical_moves].each do |x, y|
+      vert_moves.each do |x, y|
         dir = [init_x + x, init_y]
         unless board.get_position(dir).nil?
-          returned_moves << dir if board.valid_move?(self, first_pos) &&
-            @board.valid_move?(self, dir)
+          returned_moves << dir if board.piece_on_tile(dir) == ''
         end
       end
 

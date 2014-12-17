@@ -5,8 +5,8 @@ module Chess
   class Queen < SlidingPiece
 
     def initialize(position, color, board)
+      color == :W ? @icon = "\u265B".encode("UTF-8") : @icon = "\u2655".encode("UTF-8")
       @symbol = :Q
-      @icon = "Q"
       super(@symbol, @icon, position, color, board)
     end
 
