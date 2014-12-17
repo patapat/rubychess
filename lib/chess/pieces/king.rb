@@ -9,13 +9,13 @@ module Chess
       @icon = "K"
       super(@symbol, @icon, position, color, board)
     end
-    
+
     def move_dirs
       Piece::ORTHOGONAL_DIRECTIONS + Piece::DIAGONAL_DIRECTIONS
     end
 
-    def moves(@position, move_dirs)
-      super
+    def moves
+      super(@position, move_dirs)
     end
 
   end

@@ -15,8 +15,8 @@ module Chess
     end
 
 
-    def moves(@position, move_dirs)
-      super
+    def moves
+      super(@position, move_dirs)
     end
 
   end

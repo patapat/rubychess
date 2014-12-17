@@ -16,6 +16,8 @@ module Chess
       [1, 0]
     ]
 
+    attr_accessor :position
+    
     def initialize(symbol, icon, position, color, board)
       @symbol = symbol
       @icon = icon

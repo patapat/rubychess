@@ -3,7 +3,7 @@ require_relative './sliding_piece.rb'
 module Chess
 
   class Bishop < SlidingPiece
-
+    
     def initialize(position, color, board)
       @symbol = :B
       @icon = "B"
@@ -14,8 +14,8 @@ module Chess
       Piece::DIAGONAL_DIRECTIONS
     end
 
-    def moves(@position, move_dirs)
-      super
+    def moves
+      super(@position, move_dirs)
     end
   end
 

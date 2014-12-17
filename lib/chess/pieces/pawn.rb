@@ -2,7 +2,7 @@ require_relative '../piece.rb'
 
 module Chess
 
-  class Pawn
+  class Pawn < Piece
     BLACK_PAWN_MOVES = {
       vertical_moves: [[1, 0], [2, 0]],
       diagonal_moves: [[1,-1], [1, 1]]
@@ -13,11 +13,11 @@ module Chess
       diagonal_moves: [[-1,-1], [-1, 1]]
     }
 
-    def initialize(symbol, icon, position, color, board)
+    def initialize(position, color, board)
       @symbol = :P
       @icon = "P"
-      @moved = false
       super(@symbol, @icon, position, color, board)
+      @moved = false
     end
 
     def move_dirs
@@ -33,7 +33,7 @@ module Chess
 
     end
 
-    def moves(@position, move_dirs) # array of possible moves
+    def moves(move_dirs) # array of possible moves
       move_dirs[0].pop unless @moved
       init_x, init_y = @position
       returned_moves = []

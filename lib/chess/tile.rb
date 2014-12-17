@@ -1,6 +1,6 @@
 module Chess
   class Tile
-    attr_reader :value
+    attr_reader :value, :board
     attr_accessor :current_piece, :occupied
 
     def initialize(board)
@@ -13,6 +13,8 @@ module Chess
     def occupied?
       @occupied
     end
-    
+
+
+
   end
 end

@@ -9,7 +9,7 @@ module Chess
       it "is initialized with a type" do
         c = Piece.new(symbol, icon, position, color, board)
       end
-    
+
 
 
     end
