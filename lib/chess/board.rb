@@ -128,15 +128,8 @@ module Chess
       get_position(start).occupied = false
     end
 
-    # def psuedo
-    #   make the move on the duped_board (what are we passing in?)
-    #   check if we are in_check? on this board
-    #   in not return that move
-    # end
-
     def deep_dup(old_grid)
       duped_board = Board.new
-
       8.times do |i|
         8.times do |j|
           old_piece = old_grid[i][j].current_piece
@@ -151,12 +144,14 @@ module Chess
         end
       end
       duped_board
-      # grid.inject([]) do |dup, el|
-      #   dup << (el.is_a?(Array) ? deep_dup(el) : el.class.new(duped_board))
     end
 
     def render
+      headers = %w{0 1 2 3 4 5 6 7}
+      print '   ' + headers.join(' ')
+      puts
       8.times do |row|
+        print row.to_s + '  '
         8.times do |col|
           if grid[row][col].occupied?
             if (row.odd? && col.odd?) || (row.even? && col.even?)
@@ -170,10 +165,31 @@ module Chess
         end
         puts
       end
-
     end
 
-
-
+    def render_cursor(coords)
+      headers = %w{0 1 2 3 4 5 6 7}
+      print '   ' + headers.join(' ')
+      puts
+      8.times do |row|
+        print row.to_s + '  '
+        8.times do |col|
+          if row == coords[0] && col == coords[1]
+            print "  ".colorize( :background => :yellow )
+          else
+            if grid[row][col].occupied?
+              if (row.odd? && col.odd?) || (row.even? && col.even?)
+                print (grid[row][col].current_piece.icon + ' ').colorize( :background => :light_cyan)
+              else
+                print (grid[row][col].current_piece.icon + ' ').colorize( :background => :black)
+              end
+            else
+              print grid[row][col].icon
+            end
+          end
+        end
+        puts
+      end
+    end
   end
 end
