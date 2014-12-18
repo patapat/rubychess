@@ -23,8 +23,9 @@ module Chess
 
   class InvalidMoveError < ArgumentError
   end
-  
+
 end
 
 
-Chess::Game.start(Chess::Game.prompt_player)
+b = Chess::Game.new
+b.start(b.prompt_player)
