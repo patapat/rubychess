@@ -20,7 +20,7 @@ module Chess
         current_player == white_player ? (puts "White's move") : (puts "Black's move")
         if current_player.is_a? ComputerPlayer
           begin
-            current_player.random_moves
+            current_player.smart_moves
           rescue
             retry
           end
@@ -36,13 +36,13 @@ module Chess
         system("clear")
         current_player == white_player ? (current_player = black_player) : (current_player = white_player)
       end
-      game_board.render
+      game_board.render(current_player)
       game_board.checkmate?(:W) ? (puts "#{black_player.name.capitalize} Wins") : (puts "#{white_player.name.capitalize} Wins")
     end
 
-    def kb_user_input(current_pos = [0,0], board)
+    def kb_user_input(current_pos = [0,0], board, player)
       system('clear')
-      board.render_cursor(current_pos)
+      board.render_cursor(current_pos, player)
       input = STDIN.getch
 
       unless input == "\r"
@@ -58,7 +58,7 @@ module Chess
           current_pos[1] += 1 if current_pos[1].between?(0,6)
         end
 
-        kb_user_input(current_pos, board)
+        kb_user_input(current_pos, board, player)
       end
 
       system('clear')
@@ -75,10 +75,10 @@ module Chess
         puts "Do you want play vs a (h)uman or a (c)omputer"
         response = gets.chomp
         if response == 'h'
-          player1 = Player.new(name1, :W)
+          player1 = HumanPlayer.new(name1, :W)
           puts "What is the other player's name?"
           name2 = gets.chomp
-          player2 = Player.new(name2, :B)
+          player2 = HumanPlayer.new(name2, :B)
         else
           puts "Do you want to play as (w)hite or (b)lack?"
           color_choice = gets.chomp
@@ -94,8 +94,8 @@ module Chess
 
     def play_move(board, player)
       begin
-        origin = self.kb_user_input(board)
-        dest = self.kb_user_input(origin.dup, board)
+        origin = self.kb_user_input(board, player)
+        dest = self.kb_user_input(origin.dup, board, player)
         if board.piece_on_tile(origin).color != player.symbol_color
           raise "Not player's Piece"
         end
@@ -103,7 +103,7 @@ module Chess
       rescue ArgumentError
         system("clear")
         puts "Not a valid move"
-        board.render
+        board.render(player)
         retry
       end
     end

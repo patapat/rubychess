@@ -16,7 +16,5 @@ module Chess
       @occupied
     end
 
-
-
   end
 end

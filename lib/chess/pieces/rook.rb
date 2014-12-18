@@ -5,7 +5,7 @@ module Chess
   class Rook < SlidingPiece
 
     def initialize(position, color, board)
-      color == :W ? @icon = "\u265C".encode("UTF-8") : @icon = "\u2656".encode("UTF-8")
+      color == :W ? @icon = WHITE_UNICODE_PIECES[:R] : @icon = BLACK_UNICODE_PIECES[:R]
       @symbol = :R
       super(@symbol, @icon, position, color, board)
     end

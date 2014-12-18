@@ -5,7 +5,7 @@ module Chess
 
   class Board
 
-    attr_reader :board, :grid, :current_pieces
+    attr_reader :board, :grid, :current_pieces, :taken_pieces
 
     PIECES_EACH_COLOR = [:P, :P, :P, :P, :P, :P, :P, :P, :R, :R, :B, :B, :N, :N, :Q, :K]
     WHITE_STARTING_POSITIONS = [[6, 0], [6, 1], [6, 2], [6, 3], [6, 4], [6, 5], [6, 6], [6, 7],
@@ -16,6 +16,7 @@ module Chess
     def initialize
       @grid = Array.new(8) { Array.new(8) { Tile.new(self) } }
       @current_pieces = { W: [], B: [] }
+      @taken_pieces = { W: [], B: [] }
     end
 
 
@@ -74,6 +75,23 @@ module Chess
       end
     end
 
+    def takes_piece?(piece, position)
+      return false if piece_on_tile(position) == ''
+      return true if piece_on_tile(position).color != piece.color
+    end
+
+    def avoids_attack?(piece, position, color)
+      results = []
+      duped_board = self.deep_dup(self.grid)
+      duped_board.move!(piece.position, position)
+      opp_color = (color == :W ? :B : :W)
+      current_pieces[opp_color].each do |piece|
+        results += piece.moves
+      end
+
+      !results.include?(position)
+    end
+
     def in_check?(color)
       king = current_pieces[color].find do |piece|
         piece.symbol == :K
@@ -100,7 +118,9 @@ module Chess
         tile = get_position(dest)
         if tile.occupied?
           end_piece = tile.current_piece
+          @taken_pieces[end_piece.color] << end_piece
           @current_pieces[end_piece.color].delete(end_piece)
+
         end
         tile.current_piece = start_piece
         tile.occupied = true
@@ -112,7 +132,6 @@ module Chess
         raise InvalidMoveError.new "Please select a valid move"
       end
     end
-
 
     def move!(start, dest)
       start_piece = piece_on_tile(start)
@@ -146,12 +165,30 @@ module Chess
       duped_board
     end
 
-    def render
-      headers = %w{0 1 2 3 4 5 6 7}
-      print '   ' + headers.join(' ')
-      puts
+    def render_taken_pieces(row, col)
+      if row == 0 && col == 7
+        taken_pieces[:W].each { |piece| print " #{piece.icon}" }
+      elsif row == 7 && col == 7
+        taken_pieces[:B].each { |piece| print " #{piece.icon}" }
+      end
+    end
+
+    # def render_status(row, col, player)
+    #   if row == 3 && col == 7
+    #     print "Player's turn: #{player.icon}"
+    #   elsif row == 4 && col == 7
+    #     move_symbol = (board.valid_move? ? 'O'.colorize(:green) : 'X'.colorize(:red))
+    #     print "Valid move? #{move_symbol}"
+    #   end
+    # end
+
+    def render(player)
+      system('clear')
+      # headers = %w{0 1 2 3 4 5 6 7}
+      # print '   ' + headers.join(' ')
+      # puts
       8.times do |row|
-        print row.to_s + '  '
+        # print row.to_s + '  '
         8.times do |col|
           if grid[row][col].occupied?
             if (row.odd? && col.odd?) || (row.even? && col.even?)
@@ -162,17 +199,19 @@ module Chess
           else
             print grid[row][col].icon
           end
+          # render_status(row, col, player)
+          render_taken_pieces(row, col)
         end
         puts
       end
     end
 
-    def render_cursor(coords)
-      headers = %w{0 1 2 3 4 5 6 7}
-      print '   ' + headers.join(' ')
-      puts
+    def render_cursor(coords, player)
+      # headers = %w{0 1 2 3 4 5 6 7}
+      # print '   ' + headers.join(' ')
+      # puts
       8.times do |row|
-        print row.to_s + '  '
+        # print row.to_s + '  '
         8.times do |col|
           if row == coords[0] && col == coords[1]
             print "  ".colorize( :background => :yellow )
@@ -186,6 +225,8 @@ module Chess
             else
               print grid[row][col].icon
             end
+            # render_status(row, col, player)
+            render_taken_pieces(row, col)
           end
         end
         puts

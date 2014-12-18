@@ -5,7 +5,7 @@ module Chess
   class King < SteppingPiece
 
     def initialize(position, color, board)
-      color == :W ? @icon = "\u265A".encode("UTF-8") : @icon = "\u2654".encode("UTF-8")
+      color == :W ? @icon = WHITE_UNICODE_PIECES[:K] : @icon = BLACK_UNICODE_PIECES[:K]
       @symbol = :K
 
       super(@symbol, @icon, position, color, board)

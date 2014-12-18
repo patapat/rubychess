@@ -5,7 +5,7 @@ module Chess
   class Bishop < SlidingPiece
 
     def initialize(position, color, board)
-      color == :W ? @icon = "\u265D".encode("UTF-8") : @icon = "\u2657".encode("UTF-8")
+      color == :W ? @icon = WHITE_UNICODE_PIECES[:B] : @icon = BLACK_UNICODE_PIECES[:B]
       @symbol = :B
       super(@symbol, @icon, position, color, board)
     end

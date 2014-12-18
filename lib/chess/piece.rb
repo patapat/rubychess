@@ -43,12 +43,5 @@ module Chess
       result
     end
 
-
-
-    def move_in_check(pos)
-      # dup board
-      # perform move
-      # board in check
-    end
   end
 end
